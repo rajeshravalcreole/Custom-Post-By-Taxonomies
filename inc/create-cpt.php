@@ -3,12 +3,15 @@
 defined( 'ABSPATH' ) or die( 'Hey, you can\t access this file, you silly human!' );
 
 if(!class_exists('cpbt_create_cpt')){
+    // Class for creating a custom post type 
     class cpbt_create_cpt{
+        
         public function __construct(){
             add_action( 'init', array( $this, 'cpbt_custom_post_type' ) );
             add_action( 'init', array( $this, 'cpbt_custom_taxonomy' ) );
         }
-        function cpbt_custom_post_type() {
+
+        public function cpbt_custom_post_type() {
             $supports = array(
                 'title', // post title
                 'editor', // post content
@@ -44,7 +47,9 @@ if(!class_exists('cpbt_create_cpt')){
                 );
                 register_post_type('properties', $args);
         }
-        function cpbt_custom_taxonomy(){
+
+
+        public function cpbt_custom_taxonomy(){
             /* Country Custom taxonomy for properties */
 
             register_taxonomy('country', ['properties'], [
@@ -95,4 +100,9 @@ if(!class_exists('cpbt_create_cpt')){
             /* End City Custom taxonomy for properties */ 
         }
     }
+}
+
+// Create a object of class for creating a custom post type 
+if ( class_exists( 'cpbt_create_cpt' ) ) {
+    $create_cpt = new cpbt_create_cpt();
 }

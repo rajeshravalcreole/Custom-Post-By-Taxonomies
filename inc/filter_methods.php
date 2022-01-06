@@ -1,16 +1,22 @@
 <?php 
 
     if(!class_exists('filter_methods')){
+
+        // Create a class for methods 
         class filter_methods{
+            
+            // Constructor for load the methods 
             public function __construct(){
-
+                $this->cpbt_load_ajax_methods();
             }
-            function load_ajax_methods(){
-                /* End City Custom taxonomy for properties */    
+            // Function for loading all ajax methods 
+            public function cpbt_load_ajax_methods(){
 
+            // Actions for getting country list 
             add_action("wp_ajax_get_country", "get_country_list");
             add_action("wp_ajax_nopriv_get_country", "get_country_list");
-
+            
+            // Method for getting country list 
             function get_country_list(){
                 $country = get_terms( array(
                     'taxonomy' => 'country',
@@ -22,11 +28,13 @@
                     <option value="<?php echo $country[$key]->term_id;?>"><?php echo $country[$key]->name;?></option>
             <?php }
             }
+            // Method for getting country list 
 
-
+            // Actions for getting city list 
             add_action("wp_ajax_get_city", "get_city_list");
             add_action("wp_ajax_nopriv_get_city", "get_city_list");
-
+            
+            // Method for getting city list
             function get_city_list(){
                 $country_id = $_POST['country_id']; 
                 $args_for_properties = array(
@@ -59,12 +67,15 @@
                 <option value="<?php echo $city_array['id'][$k];?>"><?php echo $city_array['name'][$k];?></option>
             <?php $k++;}
             }
-}
+        }
 
+        //End Method for getting city list
 
+            // actions for getting property list   
             add_action("wp_ajax_get_properties", "get_property_list");
             add_action("wp_ajax_nopriv_get_properties", "get_property_list");
 
+            // Method for getting property list
             function get_property_list(){
                 $selected_country_id = $_POST['country_id'];
                 $selected_city_id = $_POST['city_id'];
@@ -133,8 +144,9 @@
                         echo $pagLink . "</ul>"; 
                     }    
                 }
+                //End Method for getting property list
             }
         }        
     }
-
+    $shortcode_methods = new filter_methods();
 ?>
