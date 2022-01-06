@@ -7,10 +7,16 @@ if(!class_exists('cpbt_create_cpt')){
     class cpbt_create_cpt{
         
         public function __construct(){
+            $this->hooks();
+        }
+
+        // function for define all the hooks 
+        public function hooks(){
             add_action( 'init', array( $this, 'cpbt_custom_post_type' ) );
             add_action( 'init', array( $this, 'cpbt_custom_taxonomy' ) );
         }
-
+        // function for define all the hooks 
+        
         public function cpbt_custom_post_type() {
             $supports = array(
                 'title', // post title

@@ -7,15 +7,24 @@
             
             // Constructor for load the methods 
             public function __construct(){
-                $this->cpbt_load_ajax_methods();
+                $this->hooks();
+                // $this->cpbt_load_ajax_methods();
             }
-            // Function for loading all ajax methods 
-            public function cpbt_load_ajax_methods(){
+            public function hooks(){
+                // Actions for getting country list 
+                add_action("wp_ajax_get_country", array($this,'get_country_list'));
+                add_action("wp_ajax_nopriv_get_country", array($this,'get_country_list'));
 
-            // Actions for getting country list 
-            add_action("wp_ajax_get_country", "get_country_list");
-            add_action("wp_ajax_nopriv_get_country", "get_country_list");
-            
+                // Actions for getting city list 
+                add_action("wp_ajax_get_city", array($this,"get_city_list"));
+                add_action("wp_ajax_nopriv_get_city", array($this,"get_city_list"));
+
+                // actions for getting property list   
+                add_action("wp_ajax_get_properties", array($this,"get_property_list"));
+                add_action("wp_ajax_nopriv_get_properties", array($this,"get_property_list"));
+
+            }
+
             // Method for getting country list 
             function get_country_list(){
                 $country = get_terms( array(
@@ -28,14 +37,10 @@
                     <option value="<?php echo $country[$key]->term_id;?>"><?php echo $country[$key]->name;?></option>
             <?php }
             }
-            // Method for getting country list 
+            // End Method for getting country list 
 
-            // Actions for getting city list 
-            add_action("wp_ajax_get_city", "get_city_list");
-            add_action("wp_ajax_nopriv_get_city", "get_city_list");
-            
-            // Method for getting city list
-            function get_city_list(){
+             // Method for getting city list
+             function get_city_list(){
                 $country_id = $_POST['country_id']; 
                 $args_for_properties = array(
                     'post_type' => 'properties',
@@ -48,32 +53,27 @@
                         )
                     )
                 );
-            $loop = new WP_Query($args_for_properties);
-            if($loop->have_posts()) {
-                $i=0;
-                while($loop->have_posts()) : $loop->the_post();
-                $list_of_city = get_the_terms( get_the_id(), 'city' );  
-                foreach($list_of_city as $key => $val) {
-                    if (!in_array($list_of_city[$key]->term_id, $city_array['id']))
-                    {
-                        $city_array['id'][$i] = $list_of_city[$key]->term_id;
-                        $city_array['name'][$i] = $list_of_city[$key]->name;
-                        $i++;
+                $loop = new WP_Query($args_for_properties);
+                if($loop->have_posts()) {
+                    $i=0;
+                    while($loop->have_posts()) : $loop->the_post();
+                    $list_of_city = get_the_terms( get_the_id(), 'city' );  
+                    foreach($list_of_city as $key => $val) {
+                        if (!in_array($list_of_city[$key]->term_id, $city_array['id']))
+                        {
+                            $city_array['id'][$i] = $list_of_city[$key]->term_id;
+                            $city_array['name'][$i] = $list_of_city[$key]->name;
+                            $i++;
+                        }
                     }
+                    endwhile;       
+                $k=0;
+                foreach($city_array['id'] as $key => $val) {?>
+                    <option value="<?php echo $city_array['id'][$k];?>"><?php echo $city_array['name'][$k];?></option>
+                <?php $k++;}
                 }
-                endwhile;       
-            $k=0;
-            foreach($city_array['id'] as $key => $val) {?>
-                <option value="<?php echo $city_array['id'][$k];?>"><?php echo $city_array['name'][$k];?></option>
-            <?php $k++;}
             }
-        }
-
-        //End Method for getting city list
-
-            // actions for getting property list   
-            add_action("wp_ajax_get_properties", "get_property_list");
-            add_action("wp_ajax_nopriv_get_properties", "get_property_list");
+            //End Method for getting city list
 
             // Method for getting property list
             function get_property_list(){
@@ -145,8 +145,10 @@
                     }    
                 }
                 //End Method for getting property list
-            }
         }        
     }
-    $shortcode_methods = new filter_methods();
+
+    if(class_exists('filter_methods')){
+        $shortcode_methods = new filter_methods();
+    }
 ?>

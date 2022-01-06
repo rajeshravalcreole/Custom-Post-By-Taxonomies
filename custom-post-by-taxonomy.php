@@ -25,9 +25,15 @@ if ( ! class_exists( 'custom_post_by_tax' ) ) {
         public function __construct() {
             $this->cpbt_load_methods();
             $this->cpbt_create_custom_post();
-            add_shortcode( 'cpbt_display_posts', array( $this, 'cpbt_display_shortcode' ) );
+            $this->cpbt_chk_display_shortcode();
         }
         // End Constructor for loading methods and create custom post type
+        
+        // Function for checking shortcode is used or not and render the data 
+        public function cpbt_chk_display_shortcode(){
+            add_shortcode( 'cpbt_display_posts', array( $this, 'cpbt_display_shortcode' ) );
+        }
+        // Function for checking shortcode is used or not and render the data 
 
         // Function For loading shortcode template and requried js and css 
         public function cpbt_display_shortcode() {

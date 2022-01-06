@@ -15,6 +15,12 @@ if(!class_exists('cpbt_shortcode_template')){
         }
         //End Constructor for initializing Methods to load template and required things 
 
+        // Function for call the action to load css/js
+        public function cpbt_hooks(){
+            add_action( 'wp_enqueue_scripts',  $this->cpbt_enqueue() ); 
+        }
+        //End Function for call the action to load css/js
+
         // Function for displaying Template
         public function cpbt_load_shortcode_html() {
             
@@ -38,17 +44,10 @@ if(!class_exists('cpbt_shortcode_template')){
         }
         //End Function for displaying Template
 
-        // Function for call the action to load css/js
-        public function cpbt_hooks(){
-            add_action( 'wp_enqueue_scripts',  $this->cpbt_enqueue() ); 
-        }
-        //End Function for call the action to load css/js
-
         // Function for enqueue/load the css/js
         public function cpbt_enqueue(){
             wp_enqueue_style( 'bootstrap-css', PLUGIN_URL .'assets/css/bootstrap.min.css','','',false );
-            wp_enqueue_script( 'jquery-min-js', PLUGIN_URL . 'assets/js/jquery.min.js' ,'','',false);
-            wp_enqueue_script( 'custom-js', PLUGIN_URL . 'assets/js/custom.js','','',true);
+            wp_enqueue_script( 'custom-js', PLUGIN_URL . 'assets/js/custom.js',array('jquery'),'',true);
             // localize the script to your domain name, so that you can reference the url to admin-ajax.php file easily
             wp_localize_script( 'custom-js', 'myAjax', array( 'ajaxurl' => admin_url( 'admin-ajax.php' )));
         }
